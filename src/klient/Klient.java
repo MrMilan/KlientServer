@@ -35,7 +35,7 @@ public class Klient {
                 try {
                     DataInputStream dis = new DataInputStream(is);
                     dos.writeByte(ctrl);
-                    dos.writeUTF("AAAAbbbbbCCCC");
+                    dos.writeUTF("AAqA bcbbb CCCC");
                     //nacteme zpet zpravu
                     String solv = dis.readUTF();
                     System.out.println("Vysledek prikazu " + solv);

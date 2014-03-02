@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.net.ServerSocket;
+import java.util.Scanner;
 
 public class Server {
 
@@ -27,9 +28,13 @@ public class Server {
         } catch (IOException exc) {
             System.err.println(exc.getMessage());
         }
-
+        //nepodarilo se mi rozchodit ukoncovani na serveru
+        //Scanner sc = new Scanner(System.in);
+        //System.out.print("Pro ukonceni vlozte x ");
+        
         //nacitani dat
-        while (true) {
+        while (/*sc.hasNext()&&!sc.equals("x")*/true) {
+
             try {
                 Socket clientSocket = serverSocket.accept();
                 System.err.println("Spojeni bylo akceptovano s ");
@@ -40,16 +45,16 @@ public class Server {
                     sockIn = clientSocket.getInputStream();
                     DataInputStream dis = new DataInputStream(sockIn);
                     byte cinnost = dis.readByte();
+                    if (cinnost == 0x66) {
+                        break;
+                    }
                     if (cinnost == 0x1A || cinnost == 0x1B || cinnost == 0x1C || cinnost == 0x1D) {
                         dis.available();
                         String clovo = dis.readUTF();
                         String outpus = null;
                         switch (cinnost) {
                             case 0x1A:
-                                for (String part : clovo.split(" ")) {
-                                    outpus += (new StringBuilder(part).reverse().toString() + " ").toString();
-                                }
-
+                                outpus = Reverzos(clovo);
                                 System.out.println("Bylo provedena akce Reverze");
                                 break;
                             case 0x1B:
@@ -90,7 +95,7 @@ public class Server {
 
                                     case 0x3A:
                                         outpus = dis.readDouble() + Math.E;
-                                        System.out.println("Bylo provedeno pricteni e " + Math.E);
+                                        System.out.println("Bylo provedeno pricteni e ");
                                         break;
                                     case 0x3B:
                                         outpus = dis.readDouble() + Math.PI;
@@ -100,7 +105,7 @@ public class Server {
                                 dos.writeDouble(outpus);
                             } else {
                                 System.out.println("Spatny vstup");
-                                dos.writeUTF("Bad input");
+                                dos.writeUTF("Spatny vstup");
                                 break;
                             }
                         }
@@ -117,17 +122,33 @@ public class Server {
             } catch (IOException exc) {
                 System.err.println(exc.getMessage());
             }
+            //sc.next();
         }
+        System.err.println("Zavren  server");
+        serverSocket.close();
     }
 
     public static String Reverzos(String inputString) {
         String revertString = null;
-        int countSpace=0;
+        int countSpace = 0;
+        String[] split = inputString.split(" ");
+        countSpace=split.length;
+        int checkSum = 0;
+        int rewrite=0;
         for (String part : inputString.split(" ")) {
+            if(rewrite==0)
+            {
+                revertString = new StringBuilder(part).reverse().toString();
+            }
+            else
+            {
             revertString += new StringBuilder(part).reverse().toString();
-        }
-        for (String part : inputString.split(" ")) {
-            revertString += new StringBuilder(part).reverse().toString();
+            }
+            if (countSpace > 0 && (checkSum < countSpace - 1)) {
+                revertString += " ";
+                checkSum++;
+            }
+            rewrite++;
         }
         return revertString;
 
