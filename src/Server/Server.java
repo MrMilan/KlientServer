@@ -12,7 +12,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.net.ServerSocket;
 
@@ -112,12 +111,25 @@ public class Server {
                 } catch (IOException exc) {
                     System.err.println(exc.getMessage());
                 }
-                
-clientSocket.close();
-System.err.println("Zavren client");
+
+                clientSocket.close();
+                System.err.println("Zavren client");
             } catch (IOException exc) {
                 System.err.println(exc.getMessage());
             }
         }
+    }
+
+    public static String Reverzos(String inputString) {
+        String revertString = null;
+        int countSpace=0;
+        for (String part : inputString.split(" ")) {
+            revertString += new StringBuilder(part).reverse().toString();
+        }
+        for (String part : inputString.split(" ")) {
+            revertString += new StringBuilder(part).reverse().toString();
+        }
+        return revertString;
+
     }
 }

@@ -24,7 +24,7 @@ public class Klient {
 
         int portNumber = 20666;
         String hostName = "localhost";
-        byte ctrl = 0x1F;
+        byte ctrl = 0x1A;
         //BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
         try {
             Socket clientSocket = new Socket(hostName, portNumber);
