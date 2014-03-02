@@ -24,7 +24,7 @@ public class Klient {
 
         int portNumber = 20666;
         String hostName = "localhost";
-        byte ctrl = 0x2A;
+        byte ctrl = 0x1F;
         //BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
         try {
             Socket clientSocket = new Socket(hostName, portNumber);
@@ -35,13 +35,14 @@ public class Klient {
                 try {
                     DataInputStream dis = new DataInputStream(is);
                     dos.writeByte(ctrl);
-                    dos.writeInt(4);
+                    dos.writeUTF("AAAAbbbbbCCCC");
                     //nacteme zpet zpravu
-                    int solv = dis.readInt();
+                    String solv = dis.readUTF();
+                    System.out.println("Vysledek prikazu " + solv);
                     System.err.println("Zaviram vstupy vystupy");
-dis.close();
-dos.close();
-                    System.out.println(solv);
+                    dis.close();
+                    dos.close();
+
                 } catch (IOException exc) {
                     System.err.println("Umrel jsem na odesilani ci prijimani ->" + exc.getMessage());
                 }

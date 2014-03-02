@@ -91,7 +91,7 @@ public class Server {
 
                                     case 0x3A:
                                         outpus = dis.readDouble() + Math.E;
-                                        System.out.println("Bylo provedeno pricteni e");
+                                        System.out.println("Bylo provedeno pricteni e " + Math.E);
                                         break;
                                     case 0x3B:
                                         outpus = dis.readDouble() + Math.PI;
@@ -100,7 +100,7 @@ public class Server {
                                 }
                                 dos.writeDouble(outpus);
                             } else {
-                                System.out.println("Bylo provedeno nasobeni pi");
+                                System.out.println("Spatny vstup");
                                 dos.writeUTF("Bad input");
                                 break;
                             }
