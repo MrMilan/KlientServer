@@ -29,26 +29,29 @@ public class Klient {
         try {
             Socket clientSocket = new Socket(hostName, portNumber);
             try {
-                DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+                DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream());
 
                 InputStream is = clientSocket.getInputStream();
                 try {
                     DataInputStream dis = new DataInputStream(is);
-                    outToServer.writeByte(ctrl);
-                    outToServer.writeInt(4);
+                    dos.writeByte(ctrl);
+                    dos.writeInt(4);
                     //nacteme zpet zpravu
                     int solv = dis.readInt();
-
+                    System.err.println("Zaviram vstupy vystupy");
+dis.close();
+dos.close();
                     System.out.println(solv);
                 } catch (IOException exc) {
-                    System.err.println("Umrel jsem na odesilani ci prijimani ->"+exc.getMessage());
+                    System.err.println("Umrel jsem na odesilani ci prijimani ->" + exc.getMessage());
                 }
             } catch (IOException exc) {
-                System.err.println("Umrel jsem na Input streamu ->"+exc.getMessage());
+                System.err.println("Umrel jsem na Input streamu ->" + exc.getMessage());
             }
-
+            System.err.println("Zaviram clienta");
+            clientSocket.close();
         } catch (IOException exc) {
-            System.err.println("Umrel jsem na spojeni ->"+exc.getMessage());
+            System.err.println("Umrel jsem na spojeni ->" + exc.getMessage());
         }
     }
 }
