@@ -11,7 +11,6 @@ package klient;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
 
 public class Klient {
@@ -25,52 +24,21 @@ public class Klient {
         int portNumber = 20666;
         String hostName = "localhost";
         String inputStigos = "AAA2 1bbbb";
+        int numberInt = 3;
+        double nuberD = 3;
 
         //BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
         try {
             Socket clientSocket = new Socket(hostName, portNumber);
-            try {
-                DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream());
-                DataInputStream dis = new DataInputStream(clientSocket.getInputStream());
-                try {
-
-                    SentString(dos, inputStigos, (byte) 0x1A);
-                    String solv = dis.readUTF();
-                    System.out.println("Vysledek prikazu " + solv);
-                    System.err.println("Zaviram vstupy vystupy");
-                    dis.close();
-                    dos.close();
-                    SentString(dos, inputStigos, (byte) 0x1B);
-                    String solv = dis.readUTF();
-                    System.out.println("Vysledek prikazu " + solv);
-                    System.err.println("Zaviram vstupy vystupy");
-                    dis.close();
-                    dos.close();
-                    SentString(dos, inputStigos, (byte) 0x1C);
-                    String solv = dis.readUTF();
-                    System.out.println("Vysledek prikazu " + solv);
-                    System.err.println("Zaviram vstupy vystupy");
-                    dis.close();
-                    dos.close();
-                    SentString(dos, inputStigos, (byte) 0x1D);
-                    String solv = dis.readUTF();
-                    System.out.println("Vysledek prikazu " + solv);
-                    System.err.println("Zaviram vstupy vystupy");
-                    dis.close();
-                    dos.close();
-                    //nacteme zpet zpravu
-                    String solv = dis.readUTF();
-                    System.out.println("Vysledek prikazu " + solv);
-                    System.err.println("Zaviram vstupy vystupy");
-                    dis.close();
-                    dos.close();
-
-                } catch (IOException exc) {
-                    System.err.println("Umrel jsem na odesilani ci prijimani ->" + exc.getMessage());
-                }
-            } catch (IOException exc) {
-                System.err.println("Umrel jsem na Input streamu ->" + exc.getMessage());
-            }
+            SentRecieveString(clientSocket, inputStigos, (byte) 0x1A);
+            SentRecieveString(clientSocket, inputStigos, (byte) 0x1B);
+            SentRecieveString(clientSocket, inputStigos, (byte) 0x1C);
+            SentRecieveString(clientSocket, inputStigos, (byte) 0x1D);
+            SentRecieveInt(clientSocket, numberInt, (byte) 0x2A);
+            SentRecieveInt(clientSocket, numberInt, (byte) 0x2B);
+            SentRecieveDouble(clientSocket, nuberD, (byte) 0x3A);
+            SentRecieveDouble(clientSocket, nuberD, (byte) 0x3B);
+            ShootDownServer(clientSocket);
             System.err.println("Zaviram clienta");
             clientSocket.close();
         } catch (IOException exc) {
@@ -106,7 +74,7 @@ public class Klient {
         }
     }
 
-   public static void SentIntNumber(DataOutputStream dos, int number, byte control) {
+    public static void SentIntNumber(DataOutputStream dos, int number, byte control) {
         try {
 
             switch (control) {
@@ -145,43 +113,76 @@ public class Klient {
             System.err.println("Umrel jsem na odesilani" + exc.getMessage());
         }
     }
-     public static void SentRecieveString(Socket clientSocket, String words, byte control) throws IOException {
+
+    public static void SentRecieveString(Socket clientSocket, String words, byte control) throws IOException {
         try {
-            try (DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream()); DataInputStream dis = new DataInputStream(clientSocket.getInputStream())) {
+            System.err.println("Otviram vstupy vystupy");
+            DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream());
+            DataInputStream dis = new DataInputStream(clientSocket.getInputStream());
+            try {
                 SentString(dos, words, control);
                 String solv = dis.readUTF();
                 System.out.println("Vysledek prikazu " + solv);
+                dos.close();
+                dis.close();
                 System.err.println("Zaviram vstupy vystupy");
+            } catch (IOException exc) {
+                System.err.println("Umrel jsem na odesilani ci prijimani" + exc.getMessage());
             }
+        } catch (IOException exc) {
+            System.err.println("Umrel jsem na vzyvareni spojeni" + exc.getMessage());
         }
-    catch (IOException exc) {
-            System.err.println("Umrel jsem na odesilani ci prijimani" + exc.getMessage());
     }
-}
-      public static void SentRecieveInt(Socket clientSocket, int number, byte control) throws IOException {
+
+    public static void SentRecieveInt(Socket clientSocket, int number, byte control) throws IOException {
         try {
-            try (DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream()); DataInputStream dis = new DataInputStream(clientSocket.getInputStream())) {
+            System.err.println("Otviram vstupy vystupy");
+            DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream());
+            DataInputStream dis = new DataInputStream(clientSocket.getInputStream());
+            try {
                 SentIntNumber(dos, number, control);
                 int solv = dis.readInt();
                 System.out.println("Vysledek prikazu " + solv);
+                dos.close();
+                dis.close();
                 System.err.println("Zaviram vstupy vystupy");
+            } catch (IOException exc) {
+                System.err.println("Umrel jsem na odesilani ci prijimani" + exc.getMessage());
             }
+        } catch (IOException exc) {
+            System.err.println("Umrel jsem na vzyvareni spojeni" + exc.getMessage());
         }
-    catch (IOException exc) {
-            System.err.println("Umrel jsem na odesilani ci prijimani" + exc.getMessage());
     }
-}
-       public static void SentRecieveDouble(Socket clientSocket, int number, byte control) throws IOException {
+
+    public static void SentRecieveDouble(Socket clientSocket, double number, byte control) throws IOException {
         try {
-            try (DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream()); DataInputStream dis = new DataInputStream(clientSocket.getInputStream())) {
+            System.err.println("Otviram vstupy vystupy");
+            DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream());
+            DataInputStream dis = new DataInputStream(clientSocket.getInputStream());
+            try {
                 SentDoubleNumber(dos, number, control);
                 double solv = dis.readDouble();
                 System.out.println("Vysledek prikazu " + solv);
+                dos.close();
+                dis.close();
                 System.err.println("Zaviram vstupy vystupy");
+            } catch (IOException exc) {
+                System.err.println("Umrel jsem na odesilani ci prijimani" + exc.getMessage());
             }
+        } catch (IOException exc) {
+            System.err.println("Umrel jsem na vzyvareni spojeni" + exc.getMessage());
         }
-    catch (IOException exc) {
-            System.err.println("Umrel jsem na odesilani ci prijimani" + exc.getMessage());
     }
-}
+
+    public static void ShootDownServer(Socket clientSocket) throws IOException {
+        try {
+            try (DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream())) {
+                dos.writeByte((byte) 0x66);
+
+                System.err.println("Zabijim server");
+            }
+        } catch (IOException exc) {
+            System.err.println("Umrel jsem na odesilani " + exc.getMessage());
+        }
+    }
 }
