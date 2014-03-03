@@ -129,28 +129,7 @@ public class Server {
     }
 
     public static String Reverzos(String inputString) {
-        String revertString = null;
-        int countSpace = 0;
-        String[] split = inputString.split(" ");
-        countSpace=split.length;
-        int checkSum = 0;
-        int rewrite=0;
-        for (String part : inputString.split(" ")) {
-            if(rewrite==0)
-            {
-                revertString = new StringBuilder(part).reverse().toString();
-            }
-            else
-            {
-            revertString += new StringBuilder(part).reverse().toString();
-            }
-            if (countSpace > 0 && (checkSum < countSpace - 1)) {
-                revertString += " ";
-                checkSum++;
-            }
-            rewrite++;
-        }
-        return revertString;
+         return new StringBuilder(inputString).reverse().toString();
 
     }
 }
